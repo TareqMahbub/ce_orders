@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->boolean('is_active');
             $table->string('name');
-            $table->longText('description');
-            $table->string('brand');
-            $table->string('merchant_product_no');
-            $table->string('manufacturer_product_number');
-            $table->string('ean');
+            $table->longText('description')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('merchant_product_no')->nullable();
+            $table->string('manufacturer_product_number')->nullable();
+            $table->string('ean')->nullable();
 
             $table->longText('json')->nullable();
 

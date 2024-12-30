@@ -25,16 +25,16 @@ return new class extends Migration
                 ->onDelete('cascade');
 
             $table->string('merchant_product_no');
-            $table->string('gtin');
+            $table->string('gtin')->nullable();
             $table->integer('quantity');
 
-            $table->longText('description');
+            $table->longText('description')->nullable();
 
-            $table->integer('ce_order_line_id');
-            $table->string('channel_order_line_no');
-            $table->boolean('is_fulfillment_by_marketplace');
-            $table->integer('channel_product_no');
-            $table->integer('stock_location_id');
+            $table->integer('ce_order_line_id')->nullable();
+            $table->string('channel_order_line_no')->nullable();
+            $table->boolean('is_fulfillment_by_marketplace')->default(false);
+            $table->string('channel_product_no')->nullable();
+            $table->string('stock_location_id')->nullable();
 
             $table->longText('json')->nullable();
 
