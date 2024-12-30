@@ -7,7 +7,6 @@ use App\Traits\HasMakeAble;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use RuntimeException;
 
 class CeService
 {
@@ -45,37 +44,6 @@ class CeService
         }
 
         return [];
-    }
-
-    /**
-     * @param  int  $stockLocationId
-     * @param  int  $pageIndex
-     * @param  int  $pageSize
-     * @return array
-     */
-    public function getPagedStocks(int $stockLocationId, int $pageIndex = 0, int $pageSize = 100): array
-    {
-        $url = config('ce.api.endpoint') . "/v2/offer/stock";
-        $params = [
-            'apikey' => config('ce.api.key'),
-            'stockLocationIds' => $stockLocationId,
-            'pageIndex' => $pageIndex,
-            'pageSize' => $pageSize,
-        ];
-
-        if (($responseObject = Http::get($url, $params))->successful()) {
-            $response = $responseObject->json();
-
-            if (array_key_exists('Content', $response) && $this->isRequestOk($response)) {
-                $items = $responseObject->json()['Content'];
-
-                if(!empty($items) && is_array($items)) {
-                    return $items;
-                }
-            }
-        }
-
-        throw new RuntimeException('Failed to get the stocks');
     }
 
     /**
@@ -135,8 +103,8 @@ class CeService
         if (($responseObject = Http::get($url, $params))->successful()) {
             $response = $responseObject->json();
 
-            if ($this->isRequestOk($response)) {
-                return $response;
+            if (array_key_exists('Content', $response) && $this->isRequestOk($response)) {
+                return $response['Content'];
             }
         }
 
