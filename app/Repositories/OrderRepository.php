@@ -4,11 +4,13 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use App\Models\OrderLine;
+use App\Traits\HasMakeAble;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class OrderRepository
 {
+    use HasMakeAble;
     /**
      * @param  array  $attributes
      * @param  array  $values
@@ -29,5 +31,21 @@ class OrderRepository
         }
 
         return $order;
+    }
+
+    /**
+     * @param  int  $limit
+     * @return Collection
+     */
+    public static function getTopSoldProducts(int $limit = 5): Collection
+    {
+        return OrderLine::query()
+            ->join('products', 'order_lines.product_id', '=', 'products.id')
+            ->select(['products.name as product_name', 'order_lines.gtin', DB::raw('SUM(order_lines.quantity) as total_quantity')])
+            ->whereNotNull('order_lines.gtin')
+            ->groupBy(['product_name', 'order_lines.gtin'])
+            ->orderByDesc('total_quantity')
+            ->limit($limit)
+            ->get();
     }
 }
