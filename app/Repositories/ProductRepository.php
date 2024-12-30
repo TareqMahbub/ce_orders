@@ -7,6 +7,17 @@ use App\Models\Product;
 class ProductRepository
 {
     /**
+     * @param  string  $merchantProductNo
+     * @return Product|null
+     */
+    public function getProduct(string $merchantProductNo): ?Product
+    {
+        return Product::instance(Product::query()
+            ->where('merchant_product_no', $merchantProductNo)
+            ->first());
+    }
+
+    /**
      * @param  array  $attributes
      * @param  array  $values
      * @return Product

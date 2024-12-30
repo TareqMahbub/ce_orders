@@ -3,9 +3,7 @@
 namespace App\Services;
 
 use App\Models\Order;
-use App\Repositories\OrderLineRepository;
 use App\Repositories\OrderRepository;
-use App\Repositories\ProductRepository;
 use App\Traits\HasMakeAble;
 use Exception;
 use JsonException;
@@ -40,21 +38,15 @@ class OrderService
     public function syncOrders(): void
     {
         $page = 1;
-        while (($response = $this->ceService->fetchPagedOrders($page)) && !empty($response['Content'])) {
-            echo "Syncing orders: page $page, fetched: " . count($response['Content']) . " orders\n";
+        while ($orders = $this->ceService->fetchPagedOrders($page)) {
+            echo "Syncing orders: page $page, fetched: " . count($orders) . " orders\n";
 
-            foreach($response['Content'] as $order) {
+            foreach($orders as $order) {
                 $syncedOrder = $this->syncOrder($order);
 
                 foreach($order['Lines'] as $line) {
                     if (array_key_exists('MerchantProductNo', $line)) {
-                        if (!$product = $this->productService->getProduct($line['MerchantProductNo'])) {
-                            $apiProduct = $this->ceService->getProduct($line['MerchantProductNo']);
-
-                            if (!empty($apiProduct)) {
-                                $product = $this->productService->syncProduct($apiProduct);
-                            }
-                        }
+                        $product = $this->productService->getOrSyncProduct($line['MerchantProductNo']);
 
                         if ($product) {
                             $this->orderLineService->syncOrderLine($syncedOrder->id, $product->id, $line);
@@ -66,8 +58,6 @@ class OrderService
             $page++;
         }
     }
-
-
 
     /**
      * @param  array  $data
@@ -119,7 +109,7 @@ class OrderService
      * @param  int  $newStock
      * @return bool
      */
-    public function updateStock(string $merchantProductNo, int $stockLocationId, int $newStock): bool
+    public function addStock(string $merchantProductNo, int $stockLocationId, int $newStock): bool
     {
         $currentStock = $this->getStock($merchantProductNo);
 

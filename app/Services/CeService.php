@@ -38,8 +38,8 @@ class CeService
         if (($responseObject = Http::get($url, $params))->successful()) {
             $response = $responseObject->json();
 
-            if ($this->isRequestOk($response)) {
-                return $response;
+            if (array_key_exists('Content', $response) && $this->isRequestOk($response)) {
+                return is_array($response['Content']) ? $response['Content'] : [];
             }
         }
 
@@ -104,7 +104,7 @@ class CeService
             $response = $responseObject->json();
 
             if (array_key_exists('Content', $response) && $this->isRequestOk($response)) {
-                return $response['Content'];
+                return is_array($response['Content']) ? $response['Content'] : [];
             }
         }
 

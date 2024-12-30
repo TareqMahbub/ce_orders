@@ -11,17 +11,28 @@ class ProductService
 {
     use HasMakeAble;
     private ProductRepository $productRepository;
+    private CeService $ceService;
 
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(ProductRepository $productRepository, CeService $ceService)
     {
         $this->productRepository = $productRepository;
+        $this->ceService = $ceService;
     }
 
-    public function getProduct(string $merchantProductNo): ?Product
+    /**
+     * @throws JsonException
+     */
+    public function getOrSyncProduct(string $merchantProductNo): ?Product
     {
-        return Product::instance(Product::query()
-            ->where('merchant_product_no', $merchantProductNo)
-            ->first());
+        if (!$product = $this->productRepository->getProduct($merchantProductNo)) {
+            $apiProduct = $this->ceService->getProduct($merchantProductNo);
+
+            if (!empty($apiProduct)) {
+                $product = $this->syncProduct($apiProduct);
+            }
+        }
+
+        return $product;
     }
 
     /**

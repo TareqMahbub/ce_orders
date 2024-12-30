@@ -37,7 +37,7 @@ class OrderRepository
      * @param  int  $limit
      * @return Collection
      */
-    public static function getTopSoldProducts(int $limit = 5): Collection
+    public function getTopSoldProducts(int $limit = 5): Collection
     {
         return OrderLine::query()
             ->join('products', 'order_lines.product_id', '=', 'products.id')
