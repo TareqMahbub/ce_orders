@@ -23,8 +23,7 @@ class GetStockRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'merchant_product_no' => 'required|string',
-            'stock_location_id' => 'required|int',
+            'merchant_product_no' => 'required|string'
         ];
     }
 }
