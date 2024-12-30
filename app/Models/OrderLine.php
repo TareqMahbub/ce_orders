@@ -12,14 +12,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $id
  * @property int $order_id
- * @property int $quantity
- * @property int $channel_product_no
  * @property string $merchant_product_no
- * @property string $stock_location_id
- * @property string|null $gtin
+ * @property string $gtin
+ * @property int $quantity
  * @property string $description
+ * @property string $ce_order_line_id
+ * @property string $channel_order_line_no
+ * @property bool $is_fulfillment_by_marketplace
+ * @property int $channel_product_no
+ * @property int $stock_location_id
+ * @property string $json
  *
  * @property Order $order
+ * @property Product $product
  */
 class OrderLine extends Model
 {
@@ -41,6 +46,10 @@ class OrderLine extends Model
         'channel_product_no',
         'stock_location_id',
         'json'
+    ];
+
+    protected $casts = [
+        'is_fulfillment_by_marketplace' => 'boolean',
     ];
 
     /**

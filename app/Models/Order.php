@@ -12,8 +12,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
+ * @property int $channel_id
+ * @property int $global_channel_id
  * @property string $channel_order_no
  * @property string $status
+ * @property bool $is_business_order
+ * @property string $billing_address
+ * @property string $shipping_address
+ * @property string $phone
+ * @property string $email
+ * @property string $currency_code
+ * @property string $order_date
+ * @property string $json
  *
  * @property Collection<int, OrderLine> $lines
  */
@@ -37,6 +47,11 @@ class Order extends Model
         'currency_code',
         'order_date',
         'json'
+    ];
+
+    protected $casts = [
+        'order_date' => 'datetime',
+        'is_business_order' => 'boolean',
     ];
 
     /**
