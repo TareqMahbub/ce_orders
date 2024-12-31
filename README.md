@@ -18,13 +18,15 @@ Navigate:
 git clone git@github.com:TareqMahbub/ce_orders.git
 cd ce_orders
 ```
-- Copy .env.example to .env file and configure database credentials
+- Copy .env.example to .env file and 
 ```
 copy .env.example .env (on windows)
 ```
 ```
 cp .env.example .env (on linux)
 ```
+
+- Configure database credentials
 
 -  Execute following commands ("Tested & Confirmed" on Windows 11)
 ```
