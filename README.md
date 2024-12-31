@@ -6,10 +6,10 @@ Navigate:
 # Deployment instructions
 
 - Following dependencies must be present to run the application:
-    - PHP 8.1+
+    - PHP 8.2+
     - MySQL 8
-    - Composer latest
-    - Node latest
+    - Composer 2.2+
+    - Node 23.5+
     - NPM latest
 
 - Create a MySQl database for the Application
