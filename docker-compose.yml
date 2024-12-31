@@ -1,0 +1,92 @@
+networks:
+    ce-network:
+
+services:
+    server:
+        container_name: ce-nginx
+        volumes:
+            - .:/var/www/html
+            - uploaded_files:/var/www/html/public/uploads
+        build:
+            context: .
+            dockerfile: docker/dockerfiles/nginx.dockerfile
+        ports:
+            - "8199:80"
+        depends_on:
+            - php
+            - mysql
+        networks:
+            - ce-network
+
+    php:
+        container_name: ce-php
+        volumes:
+            - uploaded_files:/var/www/html/public/uploads
+        build:
+            context: .
+            dockerfile: docker/dockerfiles/php.dockerfile
+        # volumes:
+        #   - .:/var/www/html
+        networks:
+            - ce-network
+
+    mysql:
+        container_name: ce-mysql
+        image: mysql:8
+        restart: always
+        ports:
+            - "33060:3306"
+        env_file:
+            - ./docker/env/mysql.env
+        volumes:
+            - ./docker/mysql/init:/docker-entrypoint-initdb.d
+            - mysql_data:/var/lib/mysql
+            - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+        networks:
+            - ce-network
+
+    composer:
+        container_name: ce-composer
+        build:
+            context: ./docker/dockerfiles
+            dockerfile: composer.dockerfile
+        volumes:
+            - ./:/var/www/html
+        networks:
+            - ce-network
+
+    artisan:
+        container_name: ce-artisan
+        build:
+            context: .
+            dockerfile: docker/dockerfiles/php.dockerfile
+        volumes:
+            - .:/var/www/html
+        entrypoint: ["php", "/var/www/html/artisan"]
+        networks:
+            - ce-network
+
+    npm:
+        container_name: ce-npm
+        build:
+            context: ./docker/dockerfiles
+            dockerfile: node.dockerfile
+        volumes:
+            - .:/var/www/html
+        networks:
+            - ce-network
+
+    git:
+        container_name: ce-git
+        build:
+            context: ./docker/dockerfiles
+            dockerfile: git.dockerfile
+        volumes:
+            - ./:/var/www/html
+            - /root/.ssh/id_rsa:/root/.ssh/id_rsa
+        networks:
+            - ce-network
+
+volumes:
+    uploaded_files:
+    mysql_data:
