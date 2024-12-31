@@ -13,6 +13,11 @@ Navigate:
     - NPM latest
 
 - Create a MySQl database for the Application
+- Clone the repository from GitHub
+```
+git clone git@github.com:TareqMahbub/ce_orders.git
+cd ce_orders
+```
 - Copy .env.example to .env file and configure database credentials
 ```
 copy .env.example .env (on windows)
@@ -34,6 +39,13 @@ php artisan serve --port=8199
 ```
 
 # Deploy using Docker (on any machine)
+
+- Clone the repository from GitHub
+
+```
+git clone git@github.com:TareqMahbub/ce_orders.git
+cd ce_orders
+```
 
 - Copy .env.example to .env file
 ```
