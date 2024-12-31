@@ -19,10 +19,10 @@ interface IInputs {
     merchant_product_no: string;
     stock_location_id: string;
     stock: number;
+    current_stock: number;
 }
 
 export default function UpdateStockModal({product, showUpdateStockModal, setShowUpdateStockModal}: Readonly<IProps>) {
-    const [currentSock, setCurrentSock] = useState<number|null>(null);
     const [needsConfirmation, setNeedsConfirmation] = useState(false);
     const stockInput = useRef<HTMLInputElement>(null);
 
@@ -38,6 +38,7 @@ export default function UpdateStockModal({product, showUpdateStockModal, setShow
         merchant_product_no: '',
         stock_location_id: '',
         stock: 25,
+        current_stock: -1
     });
 
     useEffect(() => {
@@ -45,6 +46,17 @@ export default function UpdateStockModal({product, showUpdateStockModal, setShow
         reset('stock')
         setNeedsConfirmation(false)
 
+        loadCurrentStock()
+    }, [product]);
+
+    useEffect(() => {
+        if (!showUpdateStockModal) {
+            reset('stock')
+            clearErrors()
+        }
+    }, [showUpdateStockModal]);
+
+    const loadCurrentStock = () => {
         if(product.merchant_product_no && product.stock_location_id) {
             setData('merchant_product_no', product.merchant_product_no)
             setData('stock_location_id', product.stock_location_id)
@@ -55,22 +67,14 @@ export default function UpdateStockModal({product, showUpdateStockModal, setShow
             axios.get(route('stock.get', queryParams))
                 .then(response => {
                     if('stock' in response.data) {
-                        setCurrentSock(response.data['stock'])
+                        setData('current_stock', response.data['stock'])
                     }
                 })
                 .catch(error => {
                     console.error('There was an error making the request:', error);
                 });
         }
-    }, [product]);
-
-    useEffect(() => {
-        if (!showUpdateStockModal) {
-            reset('stock')
-            setCurrentSock(null)
-            clearErrors()
-        }
-    }, [showUpdateStockModal]);
+    }
 
     const addStock: FormEventHandler = (e) => {
         e.preventDefault();
@@ -113,9 +117,9 @@ export default function UpdateStockModal({product, showUpdateStockModal, setShow
                 </div>
 
                 {
-                    currentSock
+                    data.current_stock > -1
                         ? <div className="mb-4 text-sm text-green-600">
-                            Current Stock: # {currentSock}
+                            Current Stock: # {data.current_stock}
                         </div>
                         : null
                 }

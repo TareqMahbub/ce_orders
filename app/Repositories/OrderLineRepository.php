@@ -3,9 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\OrderLine;
+use App\Traits\HasMakeAble;
 
 class OrderLineRepository
 {
+    use HasMakeAble;
+
     /**
      * @param  array  $attributes
      * @param  array  $values

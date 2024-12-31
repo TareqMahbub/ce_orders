@@ -3,9 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Product;
+use App\Traits\HasMakeAble;
 
 class ProductRepository
 {
+    use HasMakeAble;
+
     /**
      * @param  string  $merchantProductNo
      * @return Product|null

@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Models\OrderLine;
 use App\Traits\HasMakeAble;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class OrderRepository

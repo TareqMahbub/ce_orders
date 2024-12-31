@@ -16,9 +16,19 @@ class CeService
      * @param  array  $response
      * @return bool
      */
-    private function isRequestOk(array $response): bool
+    private function isOk(array $response): bool
     {
         return array_key_exists('StatusCode', $response) && $response['StatusCode'] === 200;
+    }
+
+    private function isSuccess(array $response): bool
+    {
+        return array_key_exists('Success', $response) && $response['Success'] === true;
+    }
+
+    private function hasContent(array $response): bool
+    {
+        return array_key_exists('Content', $response) && is_array($response['Content']);
     }
 
     /**
@@ -38,8 +48,8 @@ class CeService
         if (($responseObject = Http::get($url, $params))->successful()) {
             $response = $responseObject->json();
 
-            if (array_key_exists('Content', $response) && $this->isRequestOk($response)) {
-                return is_array($response['Content']) ? $response['Content'] : [];
+            if ($this->isOk($response) && $this->isSuccess($response) && $this->hasContent($response)) {
+                return $response['Content'];
             }
         }
 
@@ -70,7 +80,7 @@ class CeService
             if (($responseObject = Http::withQueryParameters($params)->put($url, [$data]))->successful()) {
                 $response = $responseObject->json();
 
-                if ($this->isRequestOk($response)) {
+                if ($this->isOk($response) && $this->isSuccess($response)) {
                     return true;
                 }
             }
@@ -103,8 +113,8 @@ class CeService
         if (($responseObject = Http::get($url, $params))->successful()) {
             $response = $responseObject->json();
 
-            if (array_key_exists('Content', $response) && $this->isRequestOk($response)) {
-                return is_array($response['Content']) ? $response['Content'] : [];
+            if ($this->isOk($response) && $this->isSuccess($response) && $this->hasContent($response)) {
+                return $response['Content'];
             }
         }
 

@@ -36,7 +36,7 @@ export default function Products({products, status, message}: Readonly<IProps>) 
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <p className="px-2 p-6 text-gray-900 text-center font-bold">
-                            Top Products
+                            Top 5 Products
                         </p>
 
                         <div className={'px-3'}>
@@ -63,7 +63,7 @@ export default function Products({products, status, message}: Readonly<IProps>) 
                                                     setProduct(product)
                                                     setShowUpdateStockModal(true)
                                                 }}>
-                                                    Add Stock
+                                                    Set Stock
                                                 </PrimaryButton>
                                             </td>
                                         </tr>
