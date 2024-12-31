@@ -58,6 +58,7 @@ export default function UpdateStockModal({product, showUpdateStockModal, setShow
 
     const loadCurrentStock = () => {
         if(product.merchant_product_no && product.stock_location_id) {
+            setData('current_stock', -1)
             setData('merchant_product_no', product.merchant_product_no)
             setData('stock_location_id', product.stock_location_id)
 
