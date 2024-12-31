@@ -103,7 +103,7 @@ it( 'syncs orders from CE',
     }
 );
 
-it( 'syncs order',
+it( 'syncs order from CE',
     /**
      * @throws JsonException
      */
@@ -150,6 +150,25 @@ it('gets stock', function () {
     expect($stock)->toBe(100);
 });
 
+it('throws an exception when stock information is not available', function () {
+    $ceService = Mockery::mock(CeService::class);
+    $ceService->shouldReceive('getProduct')
+        ->with('MPN-12345')
+        ->andReturn([]);
+
+    $orderService = new OrderService(
+        Mockery::mock(OrderRepository::class),
+        $ceService,
+        Mockery::mock(OrderLineService::class),
+        Mockery::mock(ProductService::class)
+    );
+
+    $this->expectException(RuntimeException::class);
+    $this->expectExceptionMessage('Failed to get the stock for merchant product no: MPN-12345');
+
+    $orderService->getStock('MPN-12345');
+});
+
 it('adds stock', function () {
     $this->ceService
         ->shouldReceive('getProduct')
@@ -164,4 +183,30 @@ it('adds stock', function () {
     $result = $this->orderService->addStock('MPN-12345', 1, 50);
 
     expect($result)->toBeTrue();
+});
+
+it('returns false when stock update fails', function () {
+    $merchantProductNo = 'MPN-12345';
+    $stockLocationId = 1;
+    $newStock = 10;
+
+    $ceService = Mockery::mock(CeService::class);
+    $ceService->shouldReceive('getProduct')
+        ->with($merchantProductNo)
+        ->andReturn(['Stock' => 5]);
+
+    $ceService->shouldReceive('setStock')
+        ->with($merchantProductNo, $stockLocationId, 15)
+        ->andReturn(false);
+
+    $orderService = new OrderService(
+        Mockery::mock(OrderRepository::class),
+        $ceService,
+        Mockery::mock(OrderLineService::class),
+        Mockery::mock(ProductService::class)
+    );
+
+    $result = $orderService->addStock($merchantProductNo, $stockLocationId, $newStock);
+
+    expect($result)->toBeFalse();
 });
