@@ -65,8 +65,8 @@ docker-compose run --rm composer install
 docker-compose run --rm artisan key:generate
 docker-compose up -d --build mysql
 docker-compose run --rm artisan migrate # run 2 times if it fails first time
-docker-compose up -d server
 docker-compose run --rm artisan orders:sync
+docker-compose up -d server
 ```
 
 -   if all containers are running, you can visit: http://localhost:8199/
