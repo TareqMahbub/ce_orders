@@ -41,9 +41,9 @@ class OrderRepository
     {
         return OrderLine::query()
             ->join('products', 'order_lines.product_id', '=', 'products.id')
-            ->select(['products.name as product_name', 'order_lines.gtin', DB::raw('SUM(order_lines.quantity) as total_quantity')])
-            ->whereNotNull('order_lines.gtin')
-            ->groupBy(['product_name', 'order_lines.gtin'])
+            ->select(['products.name as product_name', 'order_lines.merchant_product_no', 'order_lines.stock_location_id', 'order_lines.gtin', DB::raw('SUM(order_lines.quantity) as total_quantity')])
+            ->whereNotNull(['order_lines.gtin', 'order_lines.merchant_product_no', 'order_lines.stock_location_id'])
+            ->groupBy(['product_name', 'order_lines.merchant_product_no', 'order_lines.stock_location_id', 'order_lines.gtin'])
             ->orderByDesc('total_quantity')
             ->limit($limit)
             ->get();
