@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $order_date
  * @property string $json
  *
- * @property Collection<int, OrderLine> $lines
+ * @property Collection<int, OrderLine> $orderLines
  */
 class Order extends Model
 {
@@ -53,14 +53,6 @@ class Order extends Model
         'order_date' => 'datetime',
         'is_business_order' => 'boolean',
     ];
-
-    /**
-     * @return HasMany
-     */
-    public function lines(): HasMany
-    {
-        return $this->hasMany(OrderLine::class);
-    }
 
     public function orderLines(): HasMany
     {

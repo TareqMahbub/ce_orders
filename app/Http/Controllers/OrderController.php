@@ -21,9 +21,6 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): Response|ResponseFactory
     {
         return inertia('Products/Index', [
@@ -33,9 +30,6 @@ class OrderController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function getStock(GetStockRequest $request): array
     {
         $inputs = $request->validated();
@@ -45,9 +39,6 @@ class OrderController extends Controller
         ];
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function addStock(SetStockRequest $request): RedirectResponse
     {
         $inputs = $request->validated();

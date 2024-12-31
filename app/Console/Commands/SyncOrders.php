@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Services\CeService;
 use App\Services\OrderService;
 use Illuminate\Console\Command;
 use Exception;
